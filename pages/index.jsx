@@ -131,7 +131,7 @@ export default function Home() {
           {/* categories section */}
           <Box ml="77px" mt="58px">
             <Text fontSize="24px" lineHeight="31.25px" mt="58px" mb="4px">
-              Movies
+              Series
             </Text>
             <HStack gap="10px">
               {series?.data?.map((serie) => (

@@ -1,21 +1,43 @@
+import { useState } from "react";
 import Head from "next/head";
-import { Box, Heading, HStack, Image, Input, Text } from "@chakra-ui/react";
-import { useQuery } from "react-query";
+import {
+  Box,
+  Heading,
+  HStack,
+  Image,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
+import { useQuery, useQueryClient } from "react-query";
 
+// service
 import { client } from "../client";
 
 export default function Home() {
-  const { data: movies, isSuccess: moviesSuccess } = useQuery(
+  const [search, setSearch] = useState("");
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: movies,
+    isLoading: moviesLoading,
+    isError: moviesError,
+    isSuccess: moviesSuccess,
+  } = useQuery(
     "movies",
-    async () => await client.get("&type=movie")
+    async () => await client.get(`/?apikey=1b123409&type=movie&t=${search}`)
   );
 
-  const { data: series, isSuccess: seriesSuccess } = useQuery(
+  const {
+    data: series,
+    isLoading: seriesLoading,
+    isError: seriesError,
+    isSuccess: seriesSuccess,
+  } = useQuery(
     "series",
-    async () => await client.get("&type=series")
+    async () => await client.get(`/?apikey=1b123409&type=series&t=${search}`)
   );
-
-  console.log(movies);
 
   return (
     <>
@@ -54,7 +76,6 @@ export default function Home() {
             alt="background image"
             w="full"
             h="full"
-            // objectFit="cover"
             pos="absolute"
             inset="0"
             zIndex="-1"
@@ -89,6 +110,12 @@ export default function Home() {
             </Text>
             <Input
               type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                queryClient.invalidateQueries("movies");
+                queryClient.invalidateQueries("series");
+              }}
               w="full"
               mt="4px"
               h="54px"
@@ -108,23 +135,23 @@ export default function Home() {
               Movies
             </Text>
             <HStack gap="10px">
-              {movies?.data?.map((movie) => (
-                <Box
-                  key={movie.id}
-                  w="300px"
-                  h="300px"
-                  display="flex"
-                  placeItems="center"
-                  justifyContent="center"
-                  rounded="xl"
-                  bgColor="black"
-                  fontSize="24px"
-                  lineHeight="31.25px"
-                  color="white"
-                >
-                  Hello world
-                </Box>
-              ))}
+              <Box
+                w="300px"
+                h="300px"
+                display="flex"
+                placeItems="center"
+                justifyContent="center"
+                rounded="xl"
+                bgColor="black"
+                fontSize="24px"
+                lineHeight="31.25px"
+                color="white"
+              >
+                {search === "" && "Enter a search term"}
+                {moviesError && "An error occurred!"}
+                {moviesLoading && <Spinner size="xl" />}
+                {moviesSuccess && movies?.data?.Title}
+              </Box>
             </HStack>
           </Box>
 
@@ -134,23 +161,23 @@ export default function Home() {
               Series
             </Text>
             <HStack gap="10px">
-              {series?.data?.map((serie) => (
-                <Box
-                  key={serie.id}
-                  w="300px"
-                  h="300px"
-                  display="flex"
-                  placeItems="center"
-                  justifyContent="center"
-                  rounded="xl"
-                  bgColor="black"
-                  fontSize="24px"
-                  lineHeight="31.25px"
-                  color="white"
-                >
-                  Hello world
-                </Box>
-              ))}
+              <Box
+                w="300px"
+                h="300px"
+                display="flex"
+                placeItems="center"
+                justifyContent="center"
+                rounded="xl"
+                bgColor="black"
+                fontSize="24px"
+                lineHeight="31.25px"
+                color="white"
+              >
+                {search === "" && "Enter a search term"}
+                {seriesError && "An Error Occurred!"}
+                {seriesLoading && <Spinner size="xl" />}
+                {seriesSuccess && series?.data?.Title}
+              </Box>
             </HStack>
           </Box>
         </Box>

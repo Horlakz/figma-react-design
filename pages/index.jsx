@@ -110,6 +110,7 @@ export default function Home() {
             <HStack gap="10px">
               {movies?.data?.map((movie) => (
                 <Box
+                  key={movie.id}
                   w="300px"
                   h="300px"
                   display="flex"
@@ -133,8 +134,9 @@ export default function Home() {
               Movies
             </Text>
             <HStack gap="10px">
-              {series?.data?.map((movie) => (
+              {series?.data?.map((serie) => (
                 <Box
+                  key={serie.id}
                   w="300px"
                   h="300px"
                   display="flex"

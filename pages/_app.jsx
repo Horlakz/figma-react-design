@@ -1,5 +1,6 @@
 // import fonts
-import "@fontsource/dm-sans";
+import "@fontsource/dm-sans/700.css";
+import "@fontsource/dm-sans/400.css";
 
 // pages/_app.js
 import { ChakraProvider } from "@chakra-ui/react";
